@@ -1,6 +1,6 @@
 //Ball Scene
 
-let x, y, speed, radius, ballColor, moveX, moveY;
+let x, y, radius, ballColor, moveX, moveY;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -8,8 +8,8 @@ function setup() {
   y = random(height);
   radius = random(10, 30)
   ballColor = color(random(255),random(255),random(255),random(255));
-  moveX = random(-4, 5)
-  moveY = random (4, -5)
+  moveX = random(-5, 6)
+  moveY = random (5, -6)
 }
 
 function draw() {
