@@ -16,17 +16,17 @@ let thePlayers = 1;
 let oppSpeed = 5;
 let sel1;
 let sel2;
-let width = 100;
-let height = 30;
+let theWidth = 100;
+let theHeight = 30;
 let state = 'select';
 let radius = 10;
-let y = 370;
-let x = 350;
-let x2 = 350;
-let y2 = 200;
-let startX = 350;
-let startY = 200;
-let x3 = 350;
+let y;
+let x;
+let x2;
+let y2;
+let startX;
+let startY;
+let x3;
 let y3 = 0;
 let speedX = 3;
 let speedY = 2;
@@ -38,7 +38,14 @@ let count;
 
 
 function setup() {
-  createCanvas(700, 400);
+  createCanvas(windowWidth, windowHeight);
+  textAlign(CENTER, CENTER)
+  startX = width/2;
+  startY = height/2;
+  x = startX - theWidth;
+  x2 = startX;
+  y2  = startY;
+  x3 = startX - theWidth;
   textSize(100);
   ele = createAudio("assets/blip.wav");
   boom = createAudio("assets/boom.wav");
@@ -68,13 +75,21 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(700, 400);
+  resizeCanvas(windowWidth, windowHeight);
+  startX = width/2;
+  startY = height/2;
+  x = startX - theWidth;
+  x2 = startX;
+  y2 = startY;
+  x3 = startX - theWidth;
+  y2 = startY;
 }
 
 function player1() {
   if (state === 'go') {
+    y = (height - theHeight)
     rectMode(CORNER);
-    rect(x, y, width, height);
+    rect(x, y, theWidth, theHeight);
   }
 }
 
@@ -84,7 +99,7 @@ function movePlayer() {
       x -= playerSpeed;
     }
   }
-  if (x <= 700 - width) {
+  if (x <= windowWidth - theWidth) {
     if (keyIsDown(68)) {
       x += playerSpeed;
     }
@@ -92,7 +107,7 @@ function movePlayer() {
 }
 
 function bounce() {
-  if (x2 >= 700 - radius || x2 <= 0 + radius) {
+  if (x2 >= windowWidth - radius || x2 <= 0 + radius) {
     speedX = -speedX;
     ele.play();
     if (colours){
@@ -110,7 +125,7 @@ function bounce() {
     state = 'go';
     speedY = -speedY;
   }
-  if (y2 >= 400 - radius) {
+  if (y2 >= windowHeight - radius) {
     boom.play();
     state = 2;
     x2 = startX;
@@ -119,7 +134,7 @@ function bounce() {
     state = 'go';
     speedY = -speedY;
   }
-  if (x2 > x && x2 < x + width && y2 > y && y2 < y + height) {
+  if (x2 > x && x2 < x + theWidth && y2 > y && y2 < y + theHeight) {
     speedY = -speedY;
     ele.play();
     if (colours){
@@ -128,7 +143,7 @@ function bounce() {
       b = random(0,150);
     }
   }
-  if (x2 > x3 && x2 < x3 + width && y2 > y3 && y2 < y3 + height) {
+  if (x2 > x3 && x2 < x3 + theWidth && y2 > y3 && y2 < y3 + theHeight) {
     speedY = -speedY;
     ele.play();
     if (colours){
@@ -161,7 +176,7 @@ function mouseClicked() {
 
 function theText() {
   if (state === 'ready') {
-    text("Click To Start", 50, 200);
+    text("Click To Start", (width / 2), (height/2));
     fill(255);
   }
 }
@@ -169,7 +184,7 @@ function theText() {
 function player2() {
   if (state === 'go') {
     rectMode(CORNER);
-    rect(x3, y3, width, height);
+    rect(x3, y3, theWidth, theHeight);
   }
 }
 
@@ -180,7 +195,7 @@ function movePlayer2() {
         x3 -= playerSpeed;
       }
     }
-    if (x3 <= 700 - width) {
+    if (x3 <= windowWidth - theWidth) {
       if (keyIsDown(RIGHT_ARROW)) {
         x3 += playerSpeed;
       }
@@ -193,8 +208,8 @@ function moveOpp() {
     if (diff === 0) {
       x3 += oppSpeed;
     } else if (diff === 1) {
-      if (y2 <= 150) {
-        if (x2 > x3 + width+5) {
+      if (y2 <= (height/ 3)) {
+        if (x2 > x3 + theWidth+5) {
           x3 += oppSpeed;
         } else if (x2 < x3) {
           x3 -= oppSpeed;
@@ -203,15 +218,15 @@ function moveOpp() {
         //x3 += oppSpeed;
       }
     } else if (diff === 2){
-      if (y2 <= 200){
-        if(x2 >x3 + width+5){
+      if (y2 <= (height/2)){
+        if(x2 >x3 + theWidth+5){
           x3 += oppSpeed;
         } else if (x2 < x3){
           x3-=oppSpeed;
         }
       }
     } else if (diff === 3){
-      if (x2 > x3 +width){
+      if (x2 > x3 +theWidth){
         x3 += oppSpeed;
       } else if (x2 < x3 +5){
         x3 -= oppSpeed;
@@ -226,7 +241,7 @@ function bounceOpp() {
       if (x3 <= 0) {
         oppSpeed = -oppSpeed;
       }
-      if (x3 >= 700 - width) {
+      if (x3 >= windowWidth - theWidth) {
         oppSpeed = -oppSpeed;
       }
     }
@@ -235,7 +250,7 @@ function bounceOpp() {
 
 function showScore() {
   if (state === 'go') {
-    text(count, 50, 200);
+    text(count, (width/2), (height/2));
   }
 }
 
@@ -327,7 +342,7 @@ function theColours(){
 }
 
 function theScore(){
-  if (score1 === 10 || score2 === 10){
+  if (score1 >= 10 || score2 >= 10){
     state = 'win'
   }
 }
@@ -342,14 +357,14 @@ function winning(){
 function winText(){
   let theWinner;
   if ( state === 'win'){
-    if (score1 === 10){
+    if (score1 >= 10){
       theWinner = 'Player 1'
     }
-    else if (score2 === 10){
+    else if (score2 >= 10){
       theWinner = 'Player 2'
     }
   //fil(255);
-  text(theWinner +' Wins', 50, 200);
+  text(theWinner +' Wins', (width/2), (height/2));
   fill(255);
   }
 }
