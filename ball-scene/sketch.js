@@ -1,15 +1,21 @@
 //Ball Scene
 
-let x, y, radius, ballColor, moveX, moveY;
+let ballArray = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  x = random(width);
-  y = random(height);
-  radius = random(10, 30)
-  ballColor = color(random(255),random(255),random(255),random(255));
-  moveX = random(-5, 6)
-  moveY = random (5, -6)
+
+  for (let index=0; index< 30; index++){
+    let newBall = {
+    x: random(width),
+    y: random(height),
+     radius: random(5,20),
+    dx: random(-6,7),
+    dy: random(-6,7),
+    color: ('#006989'),
+    }
+    ballArray.push(newBall);
+}
 }
 
 function draw() {
@@ -18,12 +24,20 @@ function draw() {
   displayBall();
 }
 
-function displayBall(){
-  fill(ballColor);
-  circle(x, y, radius*2,);
+function moveBall(){
+  for(let theBall of ballArray){
+    theBall.x += theBall.dx
+    theBall.y += theBall.dy
+    theBall.dx = random(-6,7)
+    theBall.dy = random(-6,7)
+
+  }
 }
 
-function moveBall(){
-  x += moveX;
-  y += moveY;
+function displayBall(){
+  for(let ball of ballArray){
+    noStroke();
+    fill(ball.color);
+    circle(ball.x, ball.y, ball.radius*2);
+  }
 }
