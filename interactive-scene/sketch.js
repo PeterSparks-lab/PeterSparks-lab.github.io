@@ -3,9 +3,15 @@
 // Date
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - added sounds
+// - allowed for window resizing
+// - added secret button activated by the mouse wheel button
 
-//let backgroundColour = 'black';
+
+
+
+//Declare necessary variables
+let music = false;
 let colours;
 let r = 150;
 let g = 50;
@@ -16,6 +22,7 @@ let thePlayers = 1;
 let oppSpeed = 5;
 let sel1;
 let sel2;
+let sel3;
 let theWidth = 100;
 let theHeight = 30;
 let state = 'select';
@@ -49,7 +56,7 @@ function setup() {
   textSize(100);
   ele = createAudio("assets/blip.wav");
   boom = createAudio("assets/boom.wav");
-  //choose1();
+  theMusic = createAudio("assets/punchout.mp3")
   chooseType();
 }
 
@@ -61,7 +68,6 @@ function draw() {
   winText();
   count = score1 + "-" + score2;
   theText();
-  //choose2();
   player1();
   player2();
   moveBall();
@@ -72,8 +78,12 @@ function draw() {
   showScore();
   moveOpp();
   bounceOpp();
+  secretButton();
+  playSound();
 }
 
+
+//resizes the Canvas when the window size is changed
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   startX = width/2;
@@ -85,6 +95,8 @@ function windowResized() {
   y2 = startY;
 }
 
+
+//Draws the player at the bottom of the screen
 function player1() {
   if (state === 'go') {
     y = (height - theHeight)
@@ -93,6 +105,7 @@ function player1() {
   }
 }
 
+//Allows the player to move across the screen
 function movePlayer() {
   if (x >= 0) {
     if (keyIsDown(65)) {
@@ -106,6 +119,8 @@ function movePlayer() {
   }
 }
 
+
+// Allows the ball to bounce off walls and players and plays the corresponding sound effect/changes background if needed
 function bounce() {
   if (x2 >= windowWidth - radius || x2 <= 0 + radius) {
     speedX = -speedX;
@@ -154,6 +169,8 @@ function bounce() {
   }
 }
 
+
+// Moves the ball
 function moveBall() {
   if (state === 'go') {
     x2 += speedX;
@@ -161,6 +178,8 @@ function moveBall() {
   }
 }
 
+
+//Draws the ball
 function showBall() {
   if (state === 'go') {
     fill("white");
@@ -168,12 +187,15 @@ function showBall() {
     circle(x2, y2, radius * 2);
   }
 }
+
+//Starts the game in multiplayer mode
 function mouseClicked() {
   if (state === 'ready') {
     state = 'go';
   }
 }
 
+//Displays text to prompt players to start in multiplayer mode
 function theText() {
   if (state === 'ready') {
     text("Click To Start", (width / 2), (height/2));
@@ -181,6 +203,8 @@ function theText() {
   }
 }
 
+
+//Draws the second player/opponent at the top of the screen
 function player2() {
   if (state === 'go') {
     rectMode(CORNER);
@@ -188,6 +212,8 @@ function player2() {
   }
 }
 
+
+//Allows for a second player to move in multiplayer mode
 function movePlayer2() {
   if (thePlayers === 2) {
     if (x3 >= 0) {
@@ -203,6 +229,8 @@ function movePlayer2() {
   }
 }
 
+
+//Moves the second player in single player mode
 function moveOpp() {
   if (thePlayers === 1) {
     if (diff === 0) {
@@ -235,6 +263,8 @@ function moveOpp() {
   }
 }
 
+
+//Allows the opponent to bounce off the walls on easy mode in single player
 function bounceOpp() {
   if (thePlayers === 1) {
     if (diff === 0) {
@@ -248,12 +278,15 @@ function bounceOpp() {
   }
 }
 
+
+//Displays the current score
 function showScore() {
   if (state === 'go') {
     text(count, (width/2), (height/2));
   }
 }
 
+// Lets players choose colour or black and white modes
 function chooseType(){
   if (state === 'select'){
     sel = createSelect();
@@ -368,14 +401,43 @@ function winText(){
   fill(255);
   }
 }
-// function secretButton(){
-//   if (state === 'select'){
-//     if (mouseX >= (windowWidth - 15) && mouseY <= 15){
-//       if (mouseIsPressed){
-//         if mouseButton(CENTER){
-//           state = 'secret'
-//         }
-//       }
-//     }
-//   }
-// }
+function secretButton(){
+  if (state === 'select'){
+    if (mouseX >= (windowWidth - 25) && mouseY <= 25){
+      if (mouseIsPressed){
+        if (mouseButton === CENTER){
+          state = 'secret'
+          secretChoice();
+        }
+      }
+    }
+  }
+}
+
+function secretChoice(){
+  if (state === 'secret'){
+    sel3 = createSelect();
+    sel3.position(300, 10);
+    sel3.option('You found the secret button!');
+    sel3.option('Copyrighted Music');
+    sel3.selected('You found the secret button!');
+    sel3.changed(selectMusic);
+  }
+  
+}
+
+function selectMusic(){
+  let theSecretChoice = sel3.value();
+  if (theSecretChoice === 'Copyrighted Music'){
+    music = true;
+    sel3.remove();
+  }
+  
+}
+
+function playSound(){
+  if (music === true){
+    theMusic.play();
+    theMusic.loop();
+  }
+}
