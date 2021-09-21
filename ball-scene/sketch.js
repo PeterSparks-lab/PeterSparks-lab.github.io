@@ -21,7 +21,10 @@ function spawnBall(){
      radius: random(5,20),
     dx: random(-5,5),
     dy: random(-5,5),
-    color: ('#006989'),
+    color: color(random(255),random(255),random(255),random(255)),
+    xTime: 0,
+    yTime: 100,
+    timeChange: random(0.001,0.01),
     };
     ballArray.push(newBall);
 }
@@ -40,10 +43,16 @@ function mousePressed(){
 
 function moveBall(){
   for(let theBall of ballArray){
-    theBall.x += theBall.dx
-    theBall.y += theBall.dy
-    theBall.dx = random(-6,7)
-    theBall.dy = random(-6,7)
+    // theBall.x += theBall.dx
+    // theBall.y += theBall.dy
+    // theBall.dx = random(-6,7)
+    // theBall.dy = random(-6,7)
+
+    theBall.x = noise(theBall.xTime)*width;
+    theBall.y = noise(theBall.yTime)*height;
+
+    theBall.xTime += theBall.timeChange;
+    theBall.yTime += theBall.timeChange;
 
   }
 }
