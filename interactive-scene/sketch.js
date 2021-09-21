@@ -368,3 +368,14 @@ function winText(){
   fill(255);
   }
 }
+// function secretButton(){
+//   if (state === 'select'){
+//     if (mouseX >= (windowWidth - 15) && mouseY <= 15){
+//       if (mouseIsPressed){
+//         if mouseButton(CENTER){
+//           state = 'secret'
+//         }
+//       }
+//     }
+//   }
+// }
