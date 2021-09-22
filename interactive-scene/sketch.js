@@ -438,6 +438,7 @@ function selectMusic(){
 function playSound(){
   if (music === true){
     theMusic.play();
-    theMusic.loop();
+    theMusic.loop()
   }
 }
+
