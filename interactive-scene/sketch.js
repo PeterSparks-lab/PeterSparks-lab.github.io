@@ -20,12 +20,13 @@ let playerSpeed = 5;
 let diff;
 let thePlayers = 1;
 let oppSpeed = 5;
+let sel;
 let sel1;
 let sel2;
 let sel3;
 let theWidth = 100;
 let theHeight = 30;
-let state = 'select';
+let state = "select";
 let radius = 10;
 let y;
 let x;
@@ -35,6 +36,8 @@ let startX;
 let startY;
 let x3;
 let y3 = 0;
+let x4 = 15;
+let y4 = 25;
 let speedX = 3;
 let speedY = 2;
 let ele;
@@ -42,11 +45,12 @@ let score1 = 0;
 let score2 = 0;
 let boom;
 let count;
+let theMusic;
 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  textAlign(CENTER, CENTER)
+  textAlign(CENTER, CENTER);
   startX = width/2;
   startY = height/2;
   x = startX - theWidth;
@@ -56,7 +60,7 @@ function setup() {
   textSize(100);
   ele = createAudio("assets/blip.wav");
   boom = createAudio("assets/boom.wav");
-  theMusic = createAudio("assets/punchout.mp3")
+  theMusic = createAudio("assets/punchout.mp3");
   chooseType();
 }
 
@@ -80,6 +84,9 @@ function draw() {
   bounceOpp();
   secretButton();
   playSound();
+  pauseButton();
+  clickPauseGame();
+  clickUnpauseGame();
 }
 
 
@@ -98,8 +105,8 @@ function windowResized() {
 
 //Draws the player at the bottom of the screen
 function player1() {
-  if (state === 'go') {
-    y = (height - theHeight)
+  if (state === "go" || state === "pause") {
+    y = height - theHeight;
     rectMode(CORNER);
     rect(x, y, theWidth, theHeight);
   }
@@ -107,14 +114,16 @@ function player1() {
 
 //Allows the player to move across the screen
 function movePlayer() {
-  if (x >= 0) {
-    if (keyIsDown(65)) {
-      x -= playerSpeed;
+  if (state === "go"){
+    if (x >= 0) {
+      if (keyIsDown(65)) {
+        x -= playerSpeed;
+      }
     }
-  }
-  if (x <= windowWidth - theWidth) {
-    if (keyIsDown(68)) {
-      x += playerSpeed;
+    if (x <= windowWidth - theWidth) {
+      if (keyIsDown(68)) {
+        x += playerSpeed;
+      }
     }
   }
 }
@@ -137,7 +146,7 @@ function bounce() {
     x2 = startX;
     y2 = startY;
     score1 += 1;
-    state = 'go';
+    state = "go";
     speedY = -speedY;
   }
   if (y2 >= windowHeight - radius) {
@@ -146,7 +155,7 @@ function bounce() {
     x2 = startX;
     y2 = startY;
     score2 += 1;
-    state = 'go';
+    state = "go";
     speedY = -speedY;
   }
   if (x2 > x && x2 < x + theWidth && y2 > y && y2 < y + theHeight) {
@@ -172,7 +181,7 @@ function bounce() {
 
 // Moves the ball
 function moveBall() {
-  if (state === 'go') {
+  if (state === "go") {
     x2 += speedX;
     y2 += speedY;
   }
@@ -181,7 +190,7 @@ function moveBall() {
 
 //Draws the ball
 function showBall() {
-  if (state === 'go') {
+  if (state === "go" || state === "pause") {
     fill("white");
     noStroke();
     circle(x2, y2, radius * 2);
@@ -190,15 +199,15 @@ function showBall() {
 
 //Starts the game in multiplayer mode
 function mouseClicked() {
-  if (state === 'ready') {
-    state = 'go';
+  if (state === "ready") {
+    state = "go";
   }
 }
 
 //Displays text to prompt players to start in multiplayer mode
 function theText() {
-  if (state === 'ready') {
-    text("Click To Start", (width / 2), (height/2));
+  if (state === "ready") {
+    text("Click To Start", width / 2, height/2);
     fill(255);
   }
 }
@@ -206,7 +215,7 @@ function theText() {
 
 //Draws the second player/opponent at the top of the screen
 function player2() {
-  if (state === 'go') {
+  if (state === "go" || state === "pause") {
     rectMode(CORNER);
     rect(x3, y3, theWidth, theHeight);
   }
@@ -216,14 +225,16 @@ function player2() {
 //Allows for a second player to move in multiplayer mode
 function movePlayer2() {
   if (thePlayers === 2) {
-    if (x3 >= 0) {
-      if (keyIsDown(LEFT_ARROW)) {
-        x3 -= playerSpeed;
+    if (state === "go"){
+      if (x3 >= 0) {
+        if (keyIsDown(LEFT_ARROW)) {
+          x3 -= playerSpeed;
+        }
       }
-    }
-    if (x3 <= windowWidth - theWidth) {
-      if (keyIsDown(RIGHT_ARROW)) {
-        x3 += playerSpeed;
+      if (x3 <= windowWidth - theWidth) {
+        if (keyIsDown(RIGHT_ARROW)) {
+          x3 += playerSpeed;
+        }
       }
     }
   }
@@ -233,31 +244,39 @@ function movePlayer2() {
 //Moves the second player in single player mode
 function moveOpp() {
   if (thePlayers === 1) {
-    if (diff === 0) {
-      x3 += oppSpeed;
-    } else if (diff === 1) {
-      if (y2 <= (height/ 3)) {
-        if (x2 > x3 + theWidth+5) {
+    if (state === "go"){
+      if (diff === 0) {
+        x3 += oppSpeed;
+      }
+      else if (diff === 1) {
+        if (y2 <= height/ 3) {
+          if (x2 > x3 + theWidth+5) {
+            x3 += oppSpeed;
+          }
+          else if (x2 < x3) {
+            x3 -= oppSpeed;
+          }
+        //} else {
+          //x3 += oppSpeed;
+        }
+      }
+      else if (diff === 2){
+        if (y2 <= height/2){
+          if(x2 >x3 + theWidth+5){
+            x3 += oppSpeed;
+          }
+          else if (x2 < x3){
+            x3-=oppSpeed;
+          }
+        }
+      }
+      else if (diff === 3){
+        if (x2 > x3 +theWidth){
           x3 += oppSpeed;
-        } else if (x2 < x3) {
+        }
+        else if (x2 < x3 +5){
           x3 -= oppSpeed;
         }
-      //} else {
-        //x3 += oppSpeed;
-      }
-    } else if (diff === 2){
-      if (y2 <= (height/2)){
-        if(x2 >x3 + theWidth+5){
-          x3 += oppSpeed;
-        } else if (x2 < x3){
-          x3-=oppSpeed;
-        }
-      }
-    } else if (diff === 3){
-      if (x2 > x3 +theWidth){
-        x3 += oppSpeed;
-      } else if (x2 < x3 +5){
-        x3 -= oppSpeed;
       }
     }
   }
@@ -281,27 +300,27 @@ function bounceOpp() {
 
 //Displays the current score
 function showScore() {
-  if (state === 'go') {
-    text(count, (width/2), (height/2));
+  if (state === "go") {
+    text(count, width/2, height/2);
   }
 }
 
 // Lets players choose colour or black and white modes
 function chooseType(){
-  if (state === 'select'){
+  if (state === "select"){
     sel = createSelect();
     sel.position(160, 10);
-    sel.option('Choose Game Type');
-    sel.option('Basic');
-    sel.option('Colour Switch');
-    sel.selected('Choose Game Type');
+    sel.option("Choose Game Type");
+    sel.option("Basic");
+    sel.option("Colour Switch");
+    sel.selected("Choose Game Type");
     sel.changed(nextChoice);
   }
 }
 
 function nextChoice(){
   let theType = sel.value();
-  if (theType === 'Basic'){
+  if (theType === "Basic"){
     colours = false;
   }
   else {
@@ -312,22 +331,23 @@ function nextChoice(){
 }
 
 function choose1() {
-    sel1 = createSelect();
-    sel1.position(10, 10);
-    sel1.option("Choose Gamemode");
-    sel1.option("Single Player");
-    sel1.option("Multiplayer");
-    sel1.selected("Choose Gamemode");
-    //sel1.disable('Single Player');
-    sel1.changed(gameMode);
+  sel1 = createSelect();
+  sel1.position(10, 10);
+  sel1.option("Choose Gamemode");
+  sel1.option("Single Player");
+  sel1.option("Multiplayer");
+  sel1.selected("Choose Gamemode");
+  //sel1.disable('Single Player');
+  sel1.changed(gameMode);
 }
 
 function gameMode() {
   let players = sel1.value();
   if (players === "Multiplayer") {
     thePlayers = 2;
-    state = 'ready';
-  } else {
+    state = "ready";
+  }
+  else {
     //start = -1;
     choose2();
   }
@@ -341,7 +361,7 @@ function choose2() {
   sel2.option("No Challenge");
   sel2.option("Normal");
   sel2.option("Hard");
-  sel2.option('Impossible');
+  sel2.option("Impossible");
   sel2.selected("Difficulty");
   sel2.changed(modeGame);
 }
@@ -351,17 +371,20 @@ function modeGame() {
   if (gameDiff === "No Challenge") {
     diff = 0;
     //oppSpeed = 3;
-    state = 'go';
-  } else if (gameDiff === "Normal") {
+    state = "go";
+  }
+  else if (gameDiff === "Normal") {
     diff = 1;
     //oppSpeed = 7;
-    state = 'go';
-  } else if (gameDiff === "Hard"){
+    state = "go";
+  }
+  else if (gameDiff === "Hard"){
     diff = 2;
-    state = 'go';
-  } else if (gameDiff === "Impossible"){
+    state = "go";
+  }
+  else if (gameDiff === "Impossible"){
     diff = 3;
-    state = 'go';
+    state = "go";
   }
   sel2.remove();
 }
@@ -376,11 +399,11 @@ function theColours(){
 
 function theScore(){
   if (score1 >= 10 || score2 >= 10){
-    state = 'win'
+    state = "win";
   }
 }
 function winning(){
-  if (state === 'win'){
+  if (state === "win"){
     r = 0;
     g = 0;
     b = 0;
@@ -389,24 +412,24 @@ function winning(){
 
 function winText(){
   let theWinner;
-  if ( state === 'win'){
+  if ( state === "win"){
     if (score1 >= 10){
-      theWinner = 'Player 1'
+      theWinner = "Player 1";
     }
     else if (score2 >= 10){
-      theWinner = 'Player 2'
+      theWinner = "Player 2";
     }
-  //fil(255);
-  text(theWinner +' Wins', (width/2), (height/2));
-  fill(255);
+    //fil(255);
+    text(theWinner +" Wins", width/2, height/2);
+    fill(255);
   }
 }
 function secretButton(){
-  if (state === 'select'){
-    if (mouseX >= (windowWidth - 25) && mouseY <= 25){
+  if (state === "select"){
+    if (mouseX >= windowWidth - 25 && mouseY <= 25){
       if (mouseIsPressed){
         if (mouseButton === CENTER){
-          state = 'secret'
+          state = "secret";
           secretChoice();
         }
       }
@@ -415,12 +438,12 @@ function secretButton(){
 }
 
 function secretChoice(){
-  if (state === 'secret'){
+  if (state === "secret"){
     sel3 = createSelect();
     sel3.position(300, 10);
-    sel3.option('You found the secret button!');
-    sel3.option('Copyrighted Music');
-    sel3.selected('You found the secret button!');
+    sel3.option("You found the secret button!");
+    sel3.option("Copyrighted Music");
+    sel3.selected("You found the secret button!");
     sel3.changed(selectMusic);
   }
   
@@ -428,7 +451,7 @@ function secretChoice(){
 
 function selectMusic(){
   let theSecretChoice = sel3.value();
-  if (theSecretChoice === 'Copyrighted Music'){
+  if (theSecretChoice === "Copyrighted Music"){
     music = true;
     sel3.remove();
   }
@@ -438,7 +461,42 @@ function selectMusic(){
 function playSound(){
   if (music === true){
     theMusic.play();
-    theMusic.loop()
+    theMusic.loop=true;
   }
 }
 
+function pauseButton(){
+  if (state === "go" || state === "pause"){
+    fill(255);
+    rect(0,0,5,y4);
+    rect(10,0,5,y4);
+  }
+
+}
+
+function clickPauseGame(){
+  if (state === "go"){
+    if (mouseX <= 15 && mouseY <= 25){
+      if (mouseClicked){
+        state = "pause";
+        if (mouseButton === LEFT){
+          state = "pause";
+        }
+      }
+    }
+  }
+}
+
+
+function clickUnpauseGame(){
+  if (state === "pause"){
+    if (mouseX <= 15 && mouseY <= 25){
+      if (mouseClicked){
+        state = "go";
+        if (mouseButton === LEFT){
+          state = "go";
+        }
+      }
+    }
+  }
+}
