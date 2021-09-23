@@ -6,11 +6,23 @@
 // - added sounds
 // - allowed for window resizing
 // - added secret button activated by the mouse wheel button
+// - added a pause function
 
 
 
 
-//Declare necessary variables
+//Declares the necessary variables
+let point1X;
+let point1Y;
+let point2X;
+let point2Y;
+let point3X;
+let point3Y;
+let saveScore = [];
+let saveBallPos = [];
+let saveBallSpeed = [];
+let savePlayerPos = [];
+let message = "Paused";
 let music = false;
 let colours;
 let r = 150;
@@ -48,6 +60,12 @@ let count;
 let theMusic;
 
 
+function preload(){
+  ele = createAudio("assets/blip.wav");
+  boom = createAudio("assets/boom.wav");
+  theMusic = createAudio("assets/punchout.mp3");
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
@@ -58,13 +76,18 @@ function setup() {
   y2  = startY;
   x3 = startX - theWidth;
   textSize(100);
-  ele = createAudio("assets/blip.wav");
-  boom = createAudio("assets/boom.wav");
-  theMusic = createAudio("assets/punchout.mp3");
   chooseType();
+  point1X = windowWidth-25;
+  point1Y = 0;
+  point2X = windowWidth-25;
+  point2Y = 25;
+  point3X = windowWidth;
+  point3Y = 13;
+  theMusic.loop();
 }
 
 function draw() {
+  //console.log(state);
   background(r,g,b);
   theColours();
   theScore();
@@ -86,7 +109,9 @@ function draw() {
   playSound();
   pauseButton();
   clickPauseGame();
+  unPauseButton();
   clickUnpauseGame();
+  pauseText();
 }
 
 
@@ -100,6 +125,12 @@ function windowResized() {
   y2 = startY;
   x3 = startX - theWidth;
   y2 = startY;
+  point1X = windowWidth-25;
+  point1Y = 0;
+  point2X = windowWidth-25;
+  point2Y = 25;
+  point3X = windowWidth;
+  point3Y = 13;
 }
 
 
@@ -318,6 +349,7 @@ function chooseType(){
   }
 }
 
+//Removes the previous selection box and sets the Gamemode based on the choice, 
 function nextChoice(){
   let theType = sel.value();
   if (theType === "Basic"){
@@ -329,6 +361,7 @@ function nextChoice(){
   choose1();
   sel.remove();
 }
+
 
 function choose1() {
   sel1 = createSelect();
@@ -461,12 +494,12 @@ function selectMusic(){
 function playSound(){
   if (music === true){
     theMusic.play();
-    theMusic.loop=true;
+    //theMusic.loop(true);
   }
 }
 
 function pauseButton(){
-  if (state === "go" || state === "pause"){
+  if (state === "go"){
     fill(255);
     rect(0,0,5,y4);
     rect(10,0,5,y4);
@@ -477,9 +510,17 @@ function pauseButton(){
 function clickPauseGame(){
   if (state === "go"){
     if (mouseX <= 15 && mouseY <= 25){
-      if (mouseClicked){
-        state = "pause";
+      if (mouseIsPressed){ 
         if (mouseButton === LEFT){
+          saveScore.push(score1);
+          saveScore.push(score2);
+          saveBallPos.push(x2);
+          saveBallPos.push(y2);
+          saveBallSpeed.push(speedX);
+          saveBallSpeed.push(speedY);
+          savePlayerPos.push(x);
+          savePlayerPos.push(x3);
+          console.log("changing state");
           state = "pause";
         }
       }
@@ -487,16 +528,40 @@ function clickPauseGame(){
   }
 }
 
+function unPauseButton(){
+  if (state === "pause"){
+    triangle(point1X,point1Y,point2X,point2Y,point3X,point3Y);
+  }
+}
 
 function clickUnpauseGame(){
   if (state === "pause"){
-    if (mouseX <= 15 && mouseY <= 25){
-      if (mouseClicked){
-        state = "go";
+    if (mouseX >= point1X && mouseY <= 25){
+      if (mouseIsPressed){
         if (mouseButton === LEFT){
+          score1 = saveScore[0];
+          score2 = saveScore[1];
+          x2 = saveBallPos[0];
+          y2 = saveBallPos[1];
+          speedX = saveBallSpeed[0];
+          speedY = saveBallSpeed[1];
+          x = savePlayerPos[0];
+          x3 = savePlayerPos[1];
           state = "go";
+          savePlayerPos.length = 0;
+          saveScore.length = 0;
+          saveBallSpeed.length = 0;
+          saveBallPos.length = 0;
         }
       }
     }
   }
+}
+
+function pauseText(){
+  if (state === "pause"){
+    textAlign(CENTER);
+    text(message, windowWidth/2, windowHeight/2);
+  }
+
 }
