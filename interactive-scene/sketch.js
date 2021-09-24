@@ -370,7 +370,7 @@ function nextChoice(){
   sel.remove();
 }
 
-
+//lets players choose single or multiplayer mode
 function choose1() {
   sel1 = createSelect();
   sel1.position(10, 10);
@@ -382,6 +382,7 @@ function choose1() {
   sel1.changed(gameMode);
 }
 
+//confirms selection/initiates next choice
 function gameMode() {
   let players = sel1.value();
   if (players === "Multiplayer") {
@@ -395,6 +396,7 @@ function gameMode() {
   sel1.remove();
 }
 
+//choose difficulty on single player mode
 function choose2() {
   sel2 = createSelect();
   sel2.position(160, 10);
@@ -407,6 +409,7 @@ function choose2() {
   sel2.changed(modeGame);
 }
 
+//confirms difficulty
 function modeGame() {
   let gameDiff = sel2.value();
   if (gameDiff === "No Challenge") {
@@ -430,6 +433,7 @@ function modeGame() {
   sel2.remove();
 }
 
+//keeps colours turned off
 function theColours(){
   if (!colours){
     r = 0;
@@ -438,11 +442,14 @@ function theColours(){
   }
 }
 
+//keeps score
 function theScore(){
   if (score1 >= 10 || score2 >= 10){
     state = "win";
   }
 }
+
+//win screen background
 function winning(){
   if (state === "win"){
     r = 0;
@@ -451,6 +458,7 @@ function winning(){
   }
 }
 
+//displays a win
 function winText(){
   let theWinner;
   if ( state === "win"){
@@ -465,6 +473,8 @@ function winText(){
     fill(255);
   }
 }
+
+//creates a secret button
 function secretButton(){
   if (state === "select"){
     if (mouseX >= windowWidth - 25 && mouseY <= 25){
@@ -478,6 +488,7 @@ function secretButton(){
   }
 }
 
+//activates secret button
 function secretChoice(){
   if (state === "secret"){
     sel3 = createSelect();
@@ -490,6 +501,7 @@ function secretChoice(){
   
 }
 
+//turns on music
 function selectMusic(){
   let theSecretChoice = sel3.value();
   if (theSecretChoice === "Copyrighted Music"){
@@ -499,6 +511,7 @@ function selectMusic(){
   
 }
 
+//plays music
 function playSound(){
   if (music === true){
     theMusic.play();
@@ -506,6 +519,7 @@ function playSound(){
   }
 }
 
+//creates pause button
 function pauseButton(){
   if (state === "go"){
     fill(255);
@@ -515,6 +529,7 @@ function pauseButton(){
 
 }
 
+//pauses game
 function clickPauseGame(){
   if (state === "go"){
     if (mouseX <= 15 && mouseY <= 25){
@@ -536,12 +551,14 @@ function clickPauseGame(){
   }
 }
 
+//creates play button
 function unPauseButton(){
   if (state === "pause"){
     triangle(point1X,point1Y,point2X,point2Y,point3X,point3Y);
   }
 }
 
+//resumes gameplay
 function clickUnpauseGame(){
   if (state === "pause"){
     if (mouseX >= point1X && mouseY <= 25){
@@ -566,6 +583,7 @@ function clickUnpauseGame(){
   }
 }
 
+//displays pause message
 function pauseText(){
   if (state === "pause"){
     textAlign(CENTER);
@@ -574,6 +592,7 @@ function pauseText(){
 
 }
 
+//a second secret button
 function secondSecret(){
   if (state === "go"){
     if (mouseX >= windowWidth-25 && mouseY >= windowHeight-25){
@@ -586,6 +605,9 @@ function secondSecret(){
   }
 }
 
+//What is the dog doing?
+//displays dog picture
+//plays sound effect
 function theDog(){
   if (state === "secondSecret"){
     image(buttaDawg, 0, 0, windowWidth, windowHeight);
