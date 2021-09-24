@@ -31,7 +31,7 @@ let colours;
 let r = 150;
 let g = 50;
 let b = 100;
-let playerSpeed = 5;
+let playerSpeed = 10;
 let diff;
 let thePlayers = 1;
 let oppSpeed = 5;
