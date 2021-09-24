@@ -1,3 +1,5 @@
+//PLEASE DONT MARK YET NOT FINISHED
+
 // Interactive Scene
 // Peter Sparks
 // Date
@@ -62,9 +64,9 @@ let theMusic;
 let doge;
 
 
-// function preload(){
-  
-// }
+function preload(){
+  buttaDawg = loadImage("assets/dawgWithTheButta.jpg");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -87,7 +89,7 @@ function setup() {
   boom = createAudio("assets/boom.wav");
   theMusic = createAudio("assets/punchout.wav");
   doge = createAudio("assets/dogdoing.wav");
-  buttaDawg = loadImage("dawgWithTheButta.jpg");
+  
 }
 
 function draw() {
