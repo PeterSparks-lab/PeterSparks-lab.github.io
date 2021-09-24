@@ -12,6 +12,7 @@
 
 
 //Declares the necessary variables
+let buttaDawg;
 let point1X;
 let point1Y;
 let point2X;
@@ -58,13 +59,12 @@ let score2 = 0;
 let boom;
 let count;
 let theMusic;
+let doge;
 
 
-function preload(){
-  ele = createAudio("assets/blip.wav");
-  boom = createAudio("assets/boom.wav");
-  theMusic = createAudio("assets/punchout.mp3");
-}
+// function preload(){
+  
+// }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -83,7 +83,11 @@ function setup() {
   point2Y = 25;
   point3X = windowWidth;
   point3Y = 13;
-  theMusic.loop();
+  ele = createAudio("assets/blip.wav");
+  boom = createAudio("assets/boom.wav");
+  theMusic = createAudio("assets/punchout.wav");
+  doge = createAudio("assets/dogdoing.wav");
+  buttaDawg = loadImage("dawgWithTheButta.jpg");
 }
 
 function draw() {
@@ -112,6 +116,8 @@ function draw() {
   unPauseButton();
   clickUnpauseGame();
   pauseText();
+  secondSecret();
+  theDog();
 }
 
 
@@ -494,7 +500,7 @@ function selectMusic(){
 function playSound(){
   if (music === true){
     theMusic.play();
-    //theMusic.loop(true);
+    theMusic.loop(true);
   }
 }
 
@@ -564,4 +570,23 @@ function pauseText(){
     text(message, windowWidth/2, windowHeight/2);
   }
 
+}
+
+function secondSecret(){
+  if (state === "go"){
+    if (mouseX >= windowWidth-25 && mouseY >= windowHeight-25){
+      if (mouseIsPressed){
+        if(mouseButton === CENTER){
+          state = "secondSecret";
+        }
+      }
+    }
+  }
+}
+
+function theDog(){
+  if (state === "secondSecret"){
+    image(buttaDawg, 0, 0, windowWidth, windowHeight);
+    doge.play();
+  }
 }
