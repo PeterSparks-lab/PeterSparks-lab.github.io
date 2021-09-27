@@ -15,22 +15,24 @@ function setup() {
 }
 
 function spawnBall(){
-    let newBall = {
+  let newBall = {
     x: random(width),
     y: random(height),
-     radius: random(5,20),
+    radius: random(5,20),
     dx: random(-5,5),
     dy: random(-5,5),
     color: color(random(255),random(255),random(255),random(255)),
     xTime: 0,
     yTime: 100,
     timeChange: random(0.001,0.01),
-    };
-    ballArray.push(newBall);
+  };
+  ballArray.push(newBall);
 }
 
 function draw() {
   background(220);
+
+  checkIfBallTouchingMouse();
   moveBall();
   displayBall();
 }
@@ -62,5 +64,15 @@ function displayBall(){
     noStroke();
     fill(ball.color);
     circle(ball.x, ball.y, ball.radius*2);
+  }
+}
+
+
+function checkIfBallTouchingMouse(){
+  for(let i=ballArray.length-1; i>0; i--){
+    let howFarAway = dist(ballArray[i].x, ballArray[i].y, mouseX, mouseY);
+    if (howFarAway < ballArray[1].radius){
+      ballArray.splice(i,1);
+    }
   }
 }
