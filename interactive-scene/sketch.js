@@ -1,5 +1,3 @@
-//PLEASE DONT MARK YET NOT FINISHED
-
 // Interactive Scene
 // Peter Sparks
 // Date
