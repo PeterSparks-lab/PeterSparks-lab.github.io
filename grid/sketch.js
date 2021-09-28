@@ -21,8 +21,9 @@ function setup() {
 
 function draw() {
   background(220);
-  displayGrid();
   createRandomGrid();
+  displayGrid();
+  //createRandomGrid();
 
 }
 
