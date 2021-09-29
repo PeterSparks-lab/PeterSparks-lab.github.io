@@ -32,7 +32,7 @@ let b = 100;
 let playerSpeed = 10;
 let diff;
 let thePlayers = 1;
-let oppSpeed = 5;
+let oppSpeed = 10;
 let sel;
 let sel1;
 let sel2;
