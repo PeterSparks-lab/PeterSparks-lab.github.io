@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let gridSize =10;
+let gridSize =50;
 let grid;
 
 function setup() {

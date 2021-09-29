@@ -1,6 +1,6 @@
 // Grid Neighbours
 
-let gridDimensions = 4;
+let gridDimensions = 10;
 let grid;
 let cellSize;
 
