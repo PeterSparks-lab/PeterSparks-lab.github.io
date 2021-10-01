@@ -46,7 +46,7 @@ function keyPressed() {
     showInv = !showInv;
   }
   if (key === "r") {
-    newArray[random(0,4)][random(0,7)];
+    newArray[random(0,4)][random(0,7)] = 1;
   }
 }
 
