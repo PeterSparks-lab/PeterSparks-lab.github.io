@@ -3,6 +3,7 @@
 let gridDimensions = 25;
 let grid;
 let cellSize;
+let autoplay = false;
 
 function setup() {
   if (windowHeight < windowWidth) {
@@ -19,6 +20,7 @@ function setup() {
 function draw() {
   background(220);
   displayGrid();
+  play();
 }
 function keyPressed() {
   if (key === "e") {
@@ -29,7 +31,7 @@ function keyPressed() {
     grid = createRandomArray(gridDimensions);
   }
   if (key === " ") {
-    update();
+    autoplay = !autoplay;
   }
 }
 
@@ -134,4 +136,10 @@ function createEmptyArray(howLarge) {
     } 
   }
   return newArray;
+}
+
+function play(){
+  if (autoplay) {
+    update();
+  }
 }
