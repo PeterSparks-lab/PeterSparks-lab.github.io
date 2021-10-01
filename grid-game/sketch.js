@@ -46,7 +46,12 @@ function keyPressed() {
     showInv = !showInv;
   }
   if (key === "r") {
-    newArray[random(0,4)][random(0,7)] = 1;
+    let theX = int(random(0,7));
+    let theY = int(random(0,4));
+    newArray[theY][theX] = 1;
+  }
+  if (key === "e") {
+    createInventory(inventoryY,inventoryX);
   }
 }
 
@@ -54,6 +59,12 @@ function displayInventory() {
   
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
+      if (newArray[y][x] === 1) {
+        fill("black");
+      }
+      else {
+        fill("white");
+      }
       rect(x*cellSize, y*cellSize, cellSize, cellSize);
     }
   }
