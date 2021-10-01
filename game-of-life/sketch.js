@@ -1,9 +1,14 @@
 // Grid Neighbours
 
-let gridDimensions = 25;
+let gridDimensions = 50;
 let grid;
 let cellSize;
 let autoplay = false;
+let gun;
+
+function preload() {
+  gun = loadJSON("assets/gosper-gun.json");
+}
 
 function setup() {
   if (windowHeight < windowWidth) {
@@ -20,18 +25,26 @@ function setup() {
 function draw() {
   background(220);
   displayGrid();
-  play();
+  if (autoplay && frameCount % 10 ===0) {
+    update();
+  }
 }
 function keyPressed() {
   if (key === "e") {
     grid = createEmptyArray(gridDimensions);
 
   }
-  if (key === "r"){
+  if (key === "r") {
     grid = createRandomArray(gridDimensions);
   }
   if (key === " ") {
+    update();
+  }
+  if (key === "p") {
     autoplay = !autoplay;
+  }
+  if (key === "g") {
+    grid = gun;
   }
 }
 
@@ -136,10 +149,4 @@ function createEmptyArray(howLarge) {
     } 
   }
   return newArray;
-}
-
-function play(){
-  if (autoplay) {
-    update();
-  }
 }

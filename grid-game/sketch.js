@@ -9,6 +9,8 @@ let inventory;
 let inventoryY = 3;
 let inventoryX = 7;
 let cellSize;
+let showInv = false;
+let newArray;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -18,13 +20,16 @@ function setup() {
 
 function draw() {
   background(220);
-  if (keyIsPressed){
+  // if (keyIsPressed){
+  //   displayInventory();
+  // }
+  if (showInv) {
     displayInventory();
   }
 }
 
 function createInventory(invHeight,invWidth) {
-  let newArray = [];
+  newArray = [];
   for (let y=0; y<invHeight; y++) {
     newArray.push([]);
     for (let x=0; x<invWidth; x++) {
@@ -32,15 +37,18 @@ function createInventory(invHeight,invWidth) {
 
     }
   } 
+  console.log(newArray);
   return newArray;
 }
 
-// function keyPressed(q) {
-//   displayInventory();
-// }
+function keyPressed() {
+  if (key === "q") {
+    showInv = !showInv;
+  }
+}
 
 function displayInventory() {
-  fill("blue");
+  
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
       rect(x*cellSize, y*cellSize, cellSize, cellSize);
