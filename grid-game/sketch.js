@@ -45,6 +45,9 @@ function keyPressed() {
   if (key === "q") {
     showInv = !showInv;
   }
+  if (key === "r") {
+    newArray[random(0,4)][random(0,7)];
+  }
 }
 
 function displayInventory() {
