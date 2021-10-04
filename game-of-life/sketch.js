@@ -60,7 +60,7 @@ function update(){
         for (let j=-1; j<=1; j++) {
           if (y+i>=0 && x+j>=0 && y+i<gridDimensions && x+j<gridDimensions) {
 
-            theNeighbours += grid[y+i][x+i];
+            theNeighbours += grid[y+i][x+j];
           }
         }
       }
