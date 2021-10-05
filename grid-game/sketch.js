@@ -15,6 +15,11 @@ let slotSize;
 let spaces;
 let showInv = false;
 let invArray;
+let img;
+
+function preload(){
+  img = loadImage("assets/images/warehouse-1.png");
+}
 
 function setup() {
   if (windowWidth > windowHeight) {
@@ -30,7 +35,7 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(img);
 
   if (showInv) {
     displayInventory();
@@ -88,6 +93,7 @@ function theGameArea() {
   gameArray = [];
   for (let y=0; y<spaceSize; y++) {
     for (let x=0; x<spaceSize; x++) {
+      noFill();
       rect(x*spaces, y*spaces, spaces, spaces);
     }
   }
