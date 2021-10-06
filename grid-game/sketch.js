@@ -24,7 +24,7 @@ let grid;
 function preload(){
   grid = loadStrings("assets/levels/level.txt");
   img = loadImage("assets/images/warehouse-2.png.png");
-  guy = loadImage("assets/images/warehouseguy.png");
+  guy = loadImage("assets/images/warehouseguyedited.png");
 }
 
 function setup() {
@@ -33,8 +33,8 @@ function setup() {
   slotSize = width/7;
   spaces = width/spaceSize;
   area = theGameArea();
-  playerX = spaces;
-  playerY = spaces;
+  playerY = grid[1];
+  playerX = grid[1][1];
   console.log(playerX,playerY);
 }
 
@@ -52,6 +52,7 @@ function draw() {
     theGameArea();
 
   }
+  
 }
 
 function createInventory(invHeight,invWidth) {
@@ -80,7 +81,7 @@ function keyPressed() {
     createInventory(inventoryY,inventoryX);
   }
   if (key === "d") {
-    if (grid[playerY][playerX+1] === "."){
+    if (grid[playerY][playerX*spaces] === "."){
       playerX += spaces;
     }
   }
@@ -114,8 +115,10 @@ function theGameArea() {
 function player(){
   noStroke;
   noFill;
+  //fill("black");
   rect(playerX,playerY,spaces,spaces);
 }
+
 function theGuy(){
-  image(guy,playerX,playerY*2, spaces, spaces*2);
+  image(guy,playerX,playerY-spaces, spaces, spaces*2);
 }
