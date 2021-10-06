@@ -19,22 +19,51 @@ let img;
 let guy;
 let playerX;
 let playerY;
-let grid;
+let grid1;
+let grid2;
 
 function preload(){
-  grid = loadStrings("assets/levels/level.txt");
+  grid2 = loadStrings("assets/levels/level.txt");
+  //grid1 = loadStrings("assets/levels/level3.txt");
   img = loadImage("assets/images/warehouse-2.png.png");
-  guy = loadImage("assets/images/warehouseguyedited.png");
+  guy = loadImage("assets/images/warehouseguy.png");
 }
 
 function setup() {
   createCanvas(450,450);
+  grid1 = [
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+  ];
+
   inventory = createInventory(inventoryY, inventoryX);
   slotSize = width/7;
   spaces = width/spaceSize;
   area = theGameArea();
-  playerY = grid[1];
-  playerX = grid[1][1];
+  grid1 = convertedToInt(grid1);
+  playerY = grid1[1][1];
+  playerX = grid1[1][1];
   console.log(playerX,playerY);
 }
 
@@ -64,7 +93,7 @@ function createInventory(invHeight,invWidth) {
 
     }
   } 
-  console.log(invArray);
+  //console.log(invArray);
   return invArray;
 }
 
@@ -81,8 +110,23 @@ function keyPressed() {
     createInventory(inventoryY,inventoryX);
   }
   if (key === "d") {
-    if (grid[playerY][playerX*spaces] === "."){
-      playerX += spaces;
+    if (grid2[playerY][playerX+1] === "."){
+      playerX += 1;
+    }
+  }
+  if (key === "a") {
+    if (grid2[playerY][playerX-1] === ".") {
+      playerX -=1;
+    }
+  }
+  if (key === "w") {
+    if (grid2[playerY-1][playerX] === ".") {
+      playerY -= 1;
+    }
+  }
+  if (key === "s") {
+    if (grid2[playerY+1][playerX] === ".") {
+      playerY += 1;
     }
   }
 }
@@ -97,6 +141,7 @@ function displayInventory() {
       else {
         fill("white");
       }
+      stroke(1);
       rect(x*slotSize, y*slotSize, slotSize, slotSize);
     }
   }
@@ -107,18 +152,34 @@ function theGameArea() {
   for (let y=0; y<spaceSize; y++) {
     for (let x=0; x<spaceSize; x++) {
       noFill();
+      noStroke();
       rect(x*spaces, y*spaces, spaces, spaces);
     }
   }
 } 
 
+function convertedToInt(initialGrid) {
+  //assume rectangular array
+  let rows = initialGrid.length;
+  let cols = initialGrid[0].length;
+
+  let newGrid = [];
+  for (let y=0; y<rows; y++) {
+    newGrid.push([]);
+    for (let x=0; x<cols; x++) {
+      newGrid[y].push(int(initialGrid[y][x]));
+    }
+  }
+  return newGrid;
+}
+
 function player(){
   noStroke;
   noFill;
   //fill("black");
-  rect(playerX,playerY,spaces,spaces);
+  rect(playerX*spaces,playerY*spaces,spaces,spaces);
 }
 
 function theGuy(){
-  image(guy,playerX,playerY-spaces, spaces, spaces*2);
+  image(guy,playerX*spaces,playerY-1, spaces, spaces*2);
 }
