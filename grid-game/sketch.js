@@ -5,6 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+// Declare global variables
 let gameArray;
 let inventory;
 let area;
@@ -16,20 +17,30 @@ let spaces;
 let showInv = false;
 let invArray;
 let img;
+let right;
+let left;
+let front;
+let back;
 let guy;
 let playerX;
 let playerY;
 let grid1;
 let grid2;
 
+//Load map and sprites from assets folder
 function preload(){
   grid2 = loadStrings("assets/levels/level.txt");
   //grid1 = loadStrings("assets/levels/level3.txt");
   img = loadImage("assets/images/warehouse-2.png.png");
-  guy = loadImage("assets/images/warehouseguy.png");
+  right = loadImage("assets/images/guyFaceRight.png");
+  left = loadImage("assets/images/guyFaceLeft.png");
+  front = loadImage("assets/images/guyFaceFront.png");
+  back = loadImage("assets/images/guyFaceBack.png");
+  guy = right;
 }
 
 function setup() {
+  //createCanvas(windowWidth,windowHeight);
   createCanvas(450,450);
   grid1 = [
     [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
@@ -84,6 +95,7 @@ function draw() {
   
 }
 
+//Creates the array used for the inventory
 function createInventory(invHeight,invWidth) {
   invArray = [];
   for (let y=0; y<invHeight; y++) {
@@ -110,21 +122,25 @@ function keyPressed() {
     createInventory(inventoryY,inventoryX);
   }
   if (key === "d") {
+    guy = right;
     if (grid2[playerY][playerX+1] === "."){
       playerX += 1;
     }
   }
   if (key === "a") {
+    guy = left;
     if (grid2[playerY][playerX-1] === ".") {
       playerX -=1;
     }
   }
   if (key === "w") {
+    guy = back;
     if (grid2[playerY-1][playerX] === ".") {
       playerY -= 1;
     }
   }
   if (key === "s") {
+    guy = front;
     if (grid2[playerY+1][playerX] === ".") {
       playerY += 1;
     }
@@ -181,5 +197,5 @@ function player(){
 }
 
 function theGuy(){
-  image(guy,playerX*spaces,playerY-1, spaces, spaces*2);
+  image(guy,playerX*spaces,playerY*spaces-spaces, spaces, spaces*2);
 }
