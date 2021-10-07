@@ -26,6 +26,7 @@ let playerX;
 let playerY;
 let grid1;
 let grid2;
+let invBack;
 
 //Load map and sprites from assets folder
 function preload(){
@@ -36,6 +37,7 @@ function preload(){
   left = loadImage("assets/images/guyFaceLeft.png");
   front = loadImage("assets/images/guyFaceFront.png");
   back = loadImage("assets/images/guyFaceBack.png");
+  invBack = loadImage("assets/images/invBackgound.png");
   guy = right;
 }
 
@@ -88,10 +90,10 @@ function draw() {
     displayInventory();
     
   }
-  if (!showInv){
-    theGameArea();
+  // if (!showInv){
+  //   theGameArea();
 
-  }
+  // }
   
 }
 
@@ -154,9 +156,9 @@ function displayInventory() {
       if (inventory[y][x] === 1) {
         fill("black");
       }
-      else {
-        fill("white");
-      }
+      // else {
+      //   fill("white");
+      // }
       stroke(1);
       rect(x*slotSize, y*slotSize, slotSize, slotSize);
     }
@@ -190,8 +192,8 @@ function convertedToInt(initialGrid) {
 }
 
 function player(){
-  noStroke;
-  noFill;
+  noStroke();
+  noFill();
   //fill("black");
   rect(playerX*spaces,playerY*spaces,spaces,spaces);
 }
