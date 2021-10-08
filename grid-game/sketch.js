@@ -122,14 +122,6 @@ function keyPressed() {
   if (key === "q") {
     showInv = !showInv;
   }
-  if (key === "r") {
-    let theX = int(random(0,7));
-    let theY = int(random(0,4));
-    invArray[theY][theX] = 1;
-  }
-  if (key === "e") {
-    createInventory(inventoryY,inventoryX);
-  }
   if (key === "d") {
     guy = right;
     if (grid2[playerY][playerX+1] === "."){
@@ -173,6 +165,15 @@ function keyPressed() {
       }
     }
   }
+  if (key === "e") {
+    if (guy === right) {
+      if (grid2[playerY-1][playerX+1] === "Y") {
+        showInv = true;
+
+      }
+    }
+
+  }
 }
 
 function displayInventory() {
@@ -180,7 +181,7 @@ function displayInventory() {
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 1) {
-        image(invBox, x, y, slotSize,slotSize);
+        image(invBox, x, y, slotSize-6,slotSize-2);
       }
       // else {
       //   fill("white");
