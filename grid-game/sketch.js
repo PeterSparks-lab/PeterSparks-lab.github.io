@@ -27,6 +27,9 @@ let playerY;
 let grid1;
 let grid2;
 let invBack;
+let yBox;
+let myBox;
+let invBox;
 
 //Load map and sprites from assets folder
 function preload(){
@@ -37,7 +40,10 @@ function preload(){
   left = loadImage("assets/images/guyFaceLeft.png");
   front = loadImage("assets/images/guyFaceFront.png");
   back = loadImage("assets/images/guyFaceBack.png");
-  invBack = loadImage("assets/images/invBackgound.png");
+  yBox = loadImage("assets/images/yBox.png");
+  invBox = loadImage("assets/images/yBox2.png");
+  myBox = new Box(3,19,yBox);
+  //invBack = loadImage("assets/images/invBackgound.png");
   guy = right;
 }
 
@@ -90,11 +96,12 @@ function draw() {
     displayInventory();
     
   }
-  // if (!showInv){
-  //   theGameArea();
+  if (!showInv){
+    theGameArea();
 
-  // }
-  
+  }
+  myBox.display();
+  myBox.move();
 }
 
 //Creates the array used for the inventory
@@ -127,24 +134,43 @@ function keyPressed() {
     guy = right;
     if (grid2[playerY][playerX+1] === "."){
       playerX += 1;
+      console.log(playerX);
     }
   }
   if (key === "a") {
     guy = left;
     if (grid2[playerY][playerX-1] === ".") {
       playerX -=1;
+      console.log(playerX);
     }
   }
   if (key === "w") {
     guy = back;
     if (grid2[playerY-1][playerX] === ".") {
       playerY -= 1;
+      console.log(playerY);
     }
   }
   if (key === "s") {
     guy = front;
     if (grid2[playerY+1][playerX] === ".") {
       playerY += 1;
+      console.log(playerY);
+    }
+  }
+  if (key === " ") {
+    for (let y=0; y<inventoryY; y++) {
+      for (let x=0; x<inventoryX; x++) {
+        if (inventory[y][x] === 0) {
+          if (guy === front) {
+            if (myBox.x === playerX && myBox.y === playerY+1) {
+              myBox.onConveyor = false;
+              inventory[y][x] = 1;
+              //image(yBox, x*slotSize, y*slotSize, slotSize *2,slotSize *2);
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -154,7 +180,7 @@ function displayInventory() {
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 1) {
-        fill("black");
+        image(invBox, x, y, slotSize,slotSize);
       }
       // else {
       //   fill("white");
@@ -170,7 +196,7 @@ function theGameArea() {
   for (let y=0; y<spaceSize; y++) {
     for (let x=0; x<spaceSize; x++) {
       noFill();
-      noStroke();
+      //noStroke();
       rect(x*spaces, y*spaces, spaces, spaces);
     }
   }
@@ -192,7 +218,7 @@ function convertedToInt(initialGrid) {
 }
 
 function player(){
-  noStroke();
+  //noStroke();
   noFill();
   //fill("black");
   rect(playerX*spaces,playerY*spaces,spaces,spaces);
@@ -200,4 +226,40 @@ function player(){
 
 function theGuy(){
   image(guy,playerX*spaces,playerY*spaces-spaces, spaces, spaces*2);
+}
+
+class Box {
+  constructor(x,y,sprite) {
+    this.x = x;
+    this.y = y;
+    this.sprite = sprite;
+    //this.size = spaces;
+    this.onConveyor = true;
+    this.collected = false;
+    this.duration = 2000;
+    this.lastMove = 0;
+  }
+
+
+  display() {
+    noFill();
+    noStroke();
+    if (this.onConveyor === true) {
+      image(yBox,this.x*spaces, this.y*spaces, spaces, spaces);
+
+    }
+    
+  }
+
+  move() {
+    if (this.onConveyor === true) {
+      if (this.x === 11) {
+        this.onConveyor = false;
+      }
+      else if (millis() > this.lastMove + this.duration) {
+        this.x += 1;
+        this.lastMove = millis();
+      }
+    }
+  }
 }
