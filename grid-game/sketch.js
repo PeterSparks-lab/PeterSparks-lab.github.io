@@ -167,9 +167,11 @@ function keyPressed() {
         if (inventory[y][x] === 0) {
           if (guy === front) {
             if (myBox.x === playerX && myBox.y === playerY+1) {
-              myBox.onConveyor = false;
-              inventory[y][x] = 1;
-              myBox.reset();
+              if (playerX !== 3) {
+                myBox.onConveyor = false;
+                inventory[y][x] = 1;
+                myBox.reset();
+              }
               //image(yBox, x*slotSize, y*slotSize, slotSize *2,slotSize *2);
             }
           }
@@ -199,7 +201,7 @@ function displayInventory() {
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 1) {
-        image(invBox, x*slotSize, y*slotSize, slotSize-6,slotSize-2);
+        image(invBox, x*slotSize, y*slotSize, slotSize,slotSize);
       }
       else {
         noFill();
