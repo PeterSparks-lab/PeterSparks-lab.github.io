@@ -6,6 +6,7 @@
 // - describe what you did to take this project "above and beyond"
 
 // Declare global variables
+let spawnBox = [];
 let gameArray;
 let inventory;
 let area;
@@ -30,9 +31,15 @@ let invBack;
 let yBox;
 let myBox;
 let invBox;
+let score = 0;
+let waitTime = 5000;
+let startTime;
+// console.log("globals");
+
 
 //Load map and sprites from assets folder
 function preload(){
+  // console.log("preload");
   grid2 = loadStrings("assets/levels/level.txt");
   //grid1 = loadStrings("assets/levels/level3.txt");
   img = loadImage("assets/images/warehouse-2.png.png");
@@ -48,6 +55,7 @@ function preload(){
 }
 
 function setup() {
+  // console.log("setup");
   //createCanvas(windowWidth,windowHeight);
   createCanvas(450,450);
   grid1 = [
@@ -84,10 +92,12 @@ function setup() {
   playerY = grid1[1][1];
   playerX = grid1[1][1];
   console.log(playerX,playerY);
+  startTime = millis();
 }
 
 
 function draw() {
+  // console.log("draw");
   background(img);
   //image(guy,25,25,50,50);
   player();
@@ -102,6 +112,7 @@ function draw() {
   }
   myBox.display();
   myBox.move();
+  //createBoxes();
 }
 
 //Creates the array used for the inventory
@@ -158,6 +169,7 @@ function keyPressed() {
             if (myBox.x === playerX && myBox.y === playerY+1) {
               myBox.onConveyor = false;
               inventory[y][x] = 1;
+              myBox.reset();
               //image(yBox, x*slotSize, y*slotSize, slotSize *2,slotSize *2);
             }
           }
@@ -169,29 +181,35 @@ function keyPressed() {
     if (guy === right) {
       if (grid2[playerY-1][playerX+1] === "Y") {
         showInv = true;
-        // fill("blue");
-        // rect(width-spaces,height-spaces,spaces,spaces);
+        for (let y=0; y<inventoryY; y++) {
+          for (let x=0; x<inventoryX; x++) {
+            if (inventory[y][x] === 1) {
+              inventory[y][x] = 0;
+            }
+          }
+        }
       }
     }
-
   }
 }
+
 
 function displayInventory() {
   
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 1) {
-        image(invBox, x, y, slotSize-6,slotSize-2);
+        image(invBox, x*slotSize, y*slotSize, slotSize-6,slotSize-2);
       }
-      // else {
-      //   fill("white");
-      // }
+      else {
+        noFill();
+      }
       stroke(1);
       rect(x*slotSize, y*slotSize, slotSize, slotSize);
     }
   }
 }
+
 
 function theGameArea() {
   gameArray = [];
@@ -233,6 +251,7 @@ function theGuy(){
 class Box {
   constructor(x,y,sprite) {
     this.x = x;
+    this.alsoX = x;
     this.y = y;
     this.sprite = sprite;
     //this.size = spaces;
@@ -257,6 +276,7 @@ class Box {
     if (this.onConveyor === true) {
       if (this.x === 11) {
         this.onConveyor = false;
+        this.reset();
       }
       else if (millis() > this.lastMove + this.duration) {
         this.x += 1;
@@ -264,4 +284,22 @@ class Box {
       }
     }
   }
+
+  reset() {
+    this.x = this.alsoX;
+    this.lastMove = millis();
+    this.onConveyor = true;
+  }
 }
+
+// function createBoxes() {
+//   for (let i=0; i<100; i++) {
+//     if ( millis() > startTime + waitTime) {
+//       let aBox = new Box(3, 19, yBox);
+//       spawnBox.push(aBox);
+//       spawnBox[i].display();
+//       spawnBox[i].move();
+//       startTime = millis();
+//     }
+//   } 
+// }
