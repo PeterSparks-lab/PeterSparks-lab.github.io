@@ -169,7 +169,8 @@ function keyPressed() {
     if (guy === right) {
       if (grid2[playerY-1][playerX+1] === "Y") {
         showInv = true;
-
+        // fill("blue");
+        // rect(width-spaces,height-spaces,spaces,spaces);
       }
     }
 
