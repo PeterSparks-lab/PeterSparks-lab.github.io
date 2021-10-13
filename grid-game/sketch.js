@@ -29,8 +29,11 @@ let grid1;
 let grid2;
 let invBack;
 let yBox;
-let myBox;
-let invBox;
+let gBox;
+let box1;
+let box2;
+let invBox1;
+let invBox2;
 let score = 0;
 let waitTime = 5000;
 let startTime;
@@ -48,8 +51,12 @@ function preload(){
   front = loadImage("assets/images/guyFaceFront.png");
   back = loadImage("assets/images/guyFaceBack.png");
   yBox = loadImage("assets/images/yBox.png");
-  invBox = loadImage("assets/images/yBox2.png");
-  myBox = new Box(3,19,yBox);
+  gBox = loadImage("assets/images/greybox.png");
+  invBox1 = loadImage("assets/images/yBox2.png");
+  invBox2 = loadImage("assets/images/greybox1.png");
+  box1 = new Box(3,19,yBox,2000);
+  box2 = new Box(3,20,gBox,3500);
+
   //invBack = loadImage("assets/images/invBackgound.png");
   guy = right;
 }
@@ -88,7 +95,6 @@ function setup() {
   slotSize = width/7;
   spaces = width/spaceSize;
   area = theGameArea();
-  grid1 = convertedToInt(grid1);
   playerY = grid1[1][1];
   playerX = grid1[1][1];
   console.log(playerX,playerY);
@@ -110,9 +116,11 @@ function draw() {
     theGameArea();
 
   }
-  myBox.display();
-  myBox.move();
-  //createBoxes();
+  box1.display();
+  box1.move();
+  box2.display();
+  box2.move();
+  theText();
 }
 
 //Creates the array used for the inventory
@@ -166,13 +174,19 @@ function keyPressed() {
       for (let x=0; x<inventoryX; x++) {
         if (inventory[y][x] === 0) {
           if (guy === front) {
-            if (myBox.x === playerX && myBox.y === playerY+1) {
+            if (box1.x === playerX && box1.y === playerY+1) {
               if (playerX !== 3) {
-                myBox.onConveyor = false;
+                box1.onConveyor = false;
                 inventory[y][x] = 1;
-                myBox.reset();
+                box1.reset();
               }
-              //image(yBox, x*slotSize, y*slotSize, slotSize *2,slotSize *2);
+            }
+            else if (box2.x === playerX && box2.y === playerY+2) {
+              if (playerX !== 3) {
+                box2.onConveyor = false;
+                inventory[y][x] = 2;
+                box2.reset();
+              }
             }
           }
         }
@@ -187,6 +201,20 @@ function keyPressed() {
           for (let x=0; x<inventoryX; x++) {
             if (inventory[y][x] === 1) {
               inventory[y][x] = 0;
+              score += 10;
+            }
+          }
+        }
+      }
+    }
+    if (guy === right) {
+      if (grid2[playerY-1][playerX+1] === "G") {
+        showInv = true;
+        for (let y=0; y<inventoryY; y++) {
+          for (let x=0; x<inventoryX; x++) {
+            if (inventory[y][x] === 2) {
+              inventory[y][x] = 0;
+              score += 100;
             }
           }
         }
@@ -201,7 +229,10 @@ function displayInventory() {
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 1) {
-        image(invBox, x*slotSize, y*slotSize, slotSize,slotSize);
+        image(invBox1, x*slotSize, y*slotSize, slotSize,slotSize);
+      }
+      else if (inventory[y][x] === 2){
+        image(invBox2, x*slotSize, y*slotSize, slotSize, slotSize);
       }
       else {
         noFill();
@@ -218,29 +249,14 @@ function theGameArea() {
   for (let y=0; y<spaceSize; y++) {
     for (let x=0; x<spaceSize; x++) {
       noFill();
-      //noStroke();
+      noStroke();
       rect(x*spaces, y*spaces, spaces, spaces);
     }
   }
 } 
 
-function convertedToInt(initialGrid) {
-  //assume rectangular array
-  let rows = initialGrid.length;
-  let cols = initialGrid[0].length;
-
-  let newGrid = [];
-  for (let y=0; y<rows; y++) {
-    newGrid.push([]);
-    for (let x=0; x<cols; x++) {
-      newGrid[y].push(int(initialGrid[y][x]));
-    }
-  }
-  return newGrid;
-}
-
 function player(){
-  //noStroke();
+  noStroke();
   noFill();
   //fill("black");
   rect(playerX*spaces,playerY*spaces,spaces,spaces);
@@ -251,7 +267,7 @@ function theGuy(){
 }
 
 class Box {
-  constructor(x,y,sprite) {
+  constructor(x,y,sprite,duration) {
     this.x = x;
     this.alsoX = x;
     this.y = y;
@@ -259,7 +275,7 @@ class Box {
     //this.size = spaces;
     this.onConveyor = true;
     this.collected = false;
-    this.duration = 2000;
+    this.duration = duration;
     this.lastMove = 0;
   }
 
@@ -268,7 +284,7 @@ class Box {
     noFill();
     noStroke();
     if (this.onConveyor === true) {
-      image(yBox,this.x*spaces, this.y*spaces, spaces, spaces);
+      image(this.sprite,this.x*spaces, this.y*spaces, spaces, spaces);
 
     }
     
@@ -289,19 +305,14 @@ class Box {
 
   reset() {
     this.x = this.alsoX;
-    this.lastMove = millis();
+    console.log(millis());
+    this.lastMove = millis() + this.duration;
     this.onConveyor = true;
   }
+
 }
 
-// function createBoxes() {
-//   for (let i=0; i<100; i++) {
-//     if ( millis() > startTime + waitTime) {
-//       let aBox = new Box(3, 19, yBox);
-//       spawnBox.push(aBox);
-//       spawnBox[i].display();
-//       spawnBox[i].move();
-//       startTime = millis();
-//     }
-//   } 
-// }
+function theText() {
+  stroke(1);
+  text("Score: "+score, 50,250);
+}
