@@ -45,6 +45,8 @@ let greyChange = 0;
 let yellowChange = 0;
 let pickUp;
 let putDown;
+let music;
+let playing;
 //..............................................................................................................................................................//
 
 
@@ -63,6 +65,8 @@ function preload(){
   yellowBox = new Box(3,19,yBox,2000);
   greyBox = new Box(3,20,gBox,3500);
   guy = right;
+  music = loadSound("assets/sounds/S31-Puppet Warehouse.mp3");
+  putDown = loadSound("assets/sounds/placebox.wav");
   pickUp = loadSound("assets/sounds/pickupbox.wav");
 }
 //..............................................................................................................................................................//
@@ -95,7 +99,7 @@ function setup() {
     [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
     [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
   ];
-
+  
   inventory = createInventory(inventoryY, inventoryX);
   slotSize = width/7;
   spaces = width/spaceSize;
@@ -103,6 +107,8 @@ function setup() {
   playerX = grid1[1][1];
   console.log(playerX,playerY);
   startTime = millis();
+  playing = false;
+  //music.loop();
 }
 //..............................................................................................................................................................//
 
@@ -171,6 +177,11 @@ function keyTyped() {
   }
   if (key === " ") {
     pickupBoxes();
+  }
+  if (playing === false) {
+    music.play();
+    music.loop();
+    playing = true;
   }
 }
 //..............................................................................................................................................................//
@@ -320,6 +331,7 @@ function pickupBoxes() {
               yellowBox.onConveyor = false;
               inventory[y][x] = 1;
               yellowBox.reset();
+              pickUp.play();
             }
           }
           else if (greyBox.x === playerX && greyBox.y === playerY+2) {
@@ -327,6 +339,7 @@ function pickupBoxes() {
               greyBox.onConveyor = false;
               inventory[y][x] = 2;
               greyBox.reset();
+              pickUp.play();
             }
           }
         }
@@ -344,6 +357,7 @@ function depositGreys() {
         inventory[y][x] = 0;
         score += 100;
         greyChange += 100;
+        putDown.play();
       }
     }
   }
@@ -359,6 +373,7 @@ function depositYellows() {
         inventory[y][x] = 0;
         score += 10;
         yellowChange += 10;
+        putDown.play();
       }
     }
   }
@@ -375,6 +390,7 @@ function depositAll() {
         randomPoints = Math.floor(random(-150,150));
         score += randomPoints;
         totalChange += randomPoints;
+        putDown.play();
       }
     }
   }
