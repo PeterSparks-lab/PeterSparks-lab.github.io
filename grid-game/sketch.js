@@ -36,6 +36,13 @@ let invBox2;
 let score = 0;
 let waitTime = 5000;
 let startTime;
+let randomPoints = 0;
+let totalChange = 0;
+let scoreTime1;
+let scoreTime2;
+let scoreTime3;
+let greyChange = 0;
+let yellowChange = 0;
 //..............................................................................................................................................................//
 
 
@@ -108,6 +115,9 @@ function draw() {
   greyBox.display();
   greyBox.move();
   theScore();
+  randomPointsText();
+  yellowPointsText();
+  greyPointsText();
 }
 //..............................................................................................................................................................//
 
@@ -150,6 +160,9 @@ function keyTyped() {
       }
       if (grid2[playerY-1][playerX+1] === "Y") {
         depositYellows();
+      }
+      if (grid2[playerY-1][playerX+1] === "O") {
+        depositAll();
       }
     }
   }
@@ -258,7 +271,7 @@ function moveRight() {
   guy = right;
   if (grid2[playerY][playerX+1] === "."){
     playerX += 1;
-    //console.log("X = " + playerX);
+    console.log("X = " + playerX);
   }
 }
 //..............................................................................................................................................................//
@@ -268,7 +281,7 @@ function moveLeft() {
   guy = left;
   if (grid2[playerY][playerX-1] === ".") {
     playerX -=1;
-    //console.log("X = " + playerX);
+    console.log("X = " + playerX);
   }
 }
 //..............................................................................................................................................................//
@@ -278,7 +291,7 @@ function moveUp() {
   guy = back;
   if (grid2[playerY-1][playerX] === ".") {
     playerY -= 1;
-    //console.log("Y = " + playerY);
+    console.log("Y = " + playerY);
   }
 }
 //..............................................................................................................................................................//
@@ -288,7 +301,7 @@ function moveDown() {
   guy = front;
   if (grid2[playerY+1][playerX] === ".") {
     playerY += 1;
-    //console.log("Y = " + playerY);
+    console.log("Y = " + playerY);
   }
 }
 //..............................................................................................................................................................//
@@ -324,12 +337,14 @@ function pickupBoxes() {
 function depositGreys() {
   for (let y=0; y<inventoryY; y++) {
     for (let x=0; x<inventoryX; x++) {
-        if (inventory[y][x] === 2) {
+      if (inventory[y][x] === 2) {
         inventory[y][x] = 0;
         score += 100;
+        greyChange += 100;
       }
     }
   }
+  scoreTime3 = millis();
 }
 //..............................................................................................................................................................//
 
@@ -340,7 +355,70 @@ function depositYellows() {
       if (inventory[y][x] === 1) {
         inventory[y][x] = 0;
         score += 10;
+        yellowChange += 10;
       }
+    }
+  }
+  scoreTime2 = millis();
+}
+//..............................................................................................................................................................//
+
+//Removes all the boxes in the inventory and gives a random score change between -150 and 150...................................................................//
+function depositAll() {
+  for (let y=0; y<inventoryY; y++) {
+    for (let x=0; x<inventoryX; x++) {
+      if (inventory[y][x] === 1 || inventory[y][x] === 2) {
+        inventory[y][x] = 0;
+        randomPoints = Math.floor(random(-150,150));
+        score += randomPoints;
+        totalChange += randomPoints;
+      }
+    }
+  }
+  scoreTime1 = millis();
+  //console.log(millis());
+  //console.log(scoreTime1+2000);
+}
+//..............................................................................................................................................................///
+
+//Shows the change in score from the depositAll function........................................................................................................//
+function randomPointsText() {
+  if (totalChange !== 0) {
+    if (millis() < scoreTime1 + 2000) {
+      fill("yellow");
+      text(" "+ totalChange, 21*spaces, 180);
+
+    }
+    else {
+      totalChange = 0;
+    }
+  }
+}
+//..............................................................................................................................................................//
+
+//Shows the change in score from the depositGreys function......................................................................................................//
+function yellowPointsText() {
+  if (yellowChange !== 0) {
+    if (millis() < scoreTime2 + 2000) {
+      fill("yellow");
+      text("" + yellowChange, 21*spaces, 370);
+    }
+    else {
+      yellowChange = 0;
+    }
+  }
+}
+//..............................................................................................................................................................//
+
+//Shows the change in score from the depositYellows function....................................................................................................//
+function greyPointsText() {
+  if (greyChange !== 0) {
+    if (millis() < scoreTime3 + 2000) {
+      fill("yellow");
+      text("" + greyChange, 21*spaces, 275);
+    }
+    else {
+      greyChange = 0;
     }
   }
 }
