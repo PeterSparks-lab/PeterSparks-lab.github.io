@@ -1,6 +1,6 @@
 // Grid Based Game
 // Peter Sparks
-// Date
+// Friday October 15 2021
 //
 // Extra for Experts:
 // - used multiple grids
@@ -108,7 +108,6 @@ function setup() {
   console.log(playerX,playerY);
   startTime = millis();
   playing = false;
-  //music.loop();
 }
 //..............................................................................................................................................................//
 
@@ -355,8 +354,22 @@ function depositGreys() {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 2) {
         inventory[y][x] = 0;
-        score += 100;
-        greyChange += 100;
+        if (score >= 100000) {
+          score += 10000;
+          greyChange += 10000;
+        }
+        else if (score >= 10000) {
+          score += 1000;
+          greyChange += 1000;
+        }
+        else if (score >= 1500) {
+          score += 500;
+          greyChange += 500;
+        }
+        else {
+          score += 100;
+          greyChange += 100;
+        }
         putDown.play();
       }
     }
@@ -371,8 +384,23 @@ function depositYellows() {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 1) {
         inventory[y][x] = 0;
-        score += 10;
-        yellowChange += 10;
+        if (score >= 10000) {
+          score += 700;
+          yellowChange += 700;
+        }
+        if (score >= 1000) {
+          score += 100;
+          yellowChange += 100;
+        }
+        else if (score >= 500) {
+          score += 50;
+          yellowChange += 50;
+        }
+        else {
+          score += 10;
+          yellowChange += 10;
+
+        }
         putDown.play();
       }
     }
@@ -387,7 +415,12 @@ function depositAll() {
     for (let x=0; x<inventoryX; x++) {
       if (inventory[y][x] === 1 || inventory[y][x] === 2) {
         inventory[y][x] = 0;
-        randomPoints = Math.floor(random(-150,150));
+        if (score < 1000) {
+          randomPoints = Math.floor(random(-150,150));
+        }
+        else{
+          randomPoints = Math.floor(random(-1500,1500));
+        }
         score += randomPoints;
         totalChange += randomPoints;
         putDown.play();
@@ -442,3 +475,5 @@ function greyPointsText() {
   }
 }
 //..............................................................................................................................................................//
+
+//
